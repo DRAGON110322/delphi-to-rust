@@ -70,7 +70,7 @@ pub struct SrvMsg {
     pub client_id: i32,
     pub msg_date_time: DateTime<Local>,
     pub prj_name: String,
-    pub sender_id: Option<usize>, 
+    pub sender_id: Option<usize>,
     pub payload: MsgPayload,
 }
 
