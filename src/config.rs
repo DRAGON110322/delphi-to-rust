@@ -2,7 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 
-// Poluchenie imeni mashiny
+// Получение имени
 fn get_machine_name() -> String {
     std::env::var("COMPUTERNAME")
         .or_else(|_| std::env::var("HOSTNAME"))
@@ -62,21 +62,15 @@ pub fn load_config() -> ServerConfig {
             Ok(content) => {
                 match serde_json::from_str::<ServerConfig>(&content) {
                     Ok(config) => {
-                        println!("Конфигурация загружена из: {:?}", config_path);
                         return config;
                     }
-                    Err(e) => {
-                        eprintln!("Ошибка парсинга конфига: {}", e);
-                    }
+                    Err(_) => {}
                 }
             }
-            Err(e) => {
-                eprintln!("Ошибка чтения конфига: {}", e);
-            }
+            Err(_) => {}
         }
     }
 
-    println!("Используются настройки по умолчанию");
     ServerConfig::default()
 }
 
@@ -84,11 +78,10 @@ pub fn save_config(config: &ServerConfig) -> Result<(), String> {
     let config_path = get_config_path();
 
     let json = serde_json::to_string_pretty(config)
-        .map_err(|e| format!("Ошибка сериализации: {}", e))?;
+        .map_err(|_| "Error")?;
 
     fs::write(&config_path, json)
-        .map_err(|e| format!("Ошибка сохранения конфига: {}", e))?;
+        .map_err(|_| "Error")?;
 
-    println!("Конфигурация сохранена в: {:?}", config_path);
     Ok(())
 }
